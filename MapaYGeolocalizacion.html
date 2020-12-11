@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubicación</title>
+    <link rel="stylesheet" href="Template.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body class="bd">
+    <header>
+        <nav id="bar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a id="Bienv" class="navbar-inverse" href="IndexProject.html">
+                <h3>GSport</h3>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a id="nav1" class="nav-link" href="IndexProject.html">Inicio</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a id="nav1" class="nav-link enabled" href="EdicionEspecial.html">Calzado</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a id="nav1" class="nav-link enabled" href="EdicionEspecial.html">Dirección de envio</a>
+                    </li>
+
+                    <li class="nav-item active">
+                        <a id="nav1" class="nav-link enabled" href="Indice.html">Índice</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <article id="ARB" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="alert" role="alert">
+                <h1 class="titulo">Dirección donde enviaremos tus papos</h1>
+            </div>
+        </article>
+        <div class="container">
+            <div class="ventana">
+                <div class="principal">
+                    <p id="txtLocalizacion"></p>
+                    <img id="map">
+                    <br>
+                    <button id="btn" disabled onclick="mostrarNotificacion()">Guardar Ubicación</button>
+                </div>
+            </div>
+            <div class="controlers">
+                <button id="btn" onclick="obtenerLocalizacion()">Obtener localización</button>
+            </div>
+        </div>
+    </main>
+    <script>
+        var txtLocalizacion = document.getElementById("txtLocalizacion");
+
+        function obtenerLocalizacion() {
+            if (!navigator.geolocation) {
+                txtLocalizacion.innerText = "Tu navegador no es compatible";
+            }
+            // Flujo normal
+            setInterval(() => {
+                navigator.geolocation.getCurrentPosition(mostrarPos, errorLoc);
+            }, 1000);
+        }
+
+        function mostrarPos(pos) {
+            txtLocalizacion.innerHTML = "Latitud: " + pos.coords.latitude + "<br/>" +
+                "Longitud: " + pos.coords.longitude;
+
+            var img_url = "https://maps.googleapis.com/maps/api/staticmap" +
+                "?center=" + pos.coords.latitude + "," + pos.coords.longitude +
+                "&size=400x300" +
+                "&markers=color:red%7c" + pos.coords.latitude + "," + pos.coords.longitude +
+                "&key=AIzaSyCv9VAsM4KzjDdvuV2CzFAMuazqOfqFlgM";
+
+            var map = document.getElementById("map");
+            map.setAttribute("src", img_url);
+            document.getElementById('btn').disabled = false;
+        }
+
+
+        function errorLoc(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    txtLocalizacion.innerText = "No tienes permisos de acceder a la Geolocalización";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    txtLocalizacion.innerText = "No se pudo acceder a la localización";
+                    break;
+                case error.TIMEOUT:
+                    txtLocalizacion.innerText = "El tiempo de respuesta para obtener la localización se agoto";
+                    break;
+                case error.UKNOWN_ERROR:
+                    txtLocalizacion.innerText = "A ocurrudo un error";
+                default:
+                    txtLocalizacion.innerText = "A ocurrudo un error";
+                    break;
+            }
+        }
+
+        function mostrarNotificacion() {
+            if (!window.Notification) {
+                txtMensaje.innerText = "No es compatible tu navegador";
+            }
+            Notification.requestPermission(function(status) {
+                if (Notification.permission !== status) {
+                    Notification.permission = status;
+                }
+                if (Notification.permission == "granted") {
+                    var n = new Notification("Informacion Guardada", {
+                        body: "Tu dirección de envio se guardo correctamente",
+                        icon: "Imagenes/disco-flexible.png",
+                        vibrate: [200, 100],
+                        data: {
+                            userId: 1235,
+                            mensaje: "Este es el mensaje"
+                        },
+                    });
+                    n.onclick = (args) => {
+                        alert("Gracias por su compra");
+                        console.log(args.currentTarget.data);
+                    }
+                } else {
+                    txtMensaje.innerText = "No tienes permiso para mandar notifiaciones";
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

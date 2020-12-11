@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #1979a9;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            border: 2px solid black;
+            box-shadow: 1px 3px 5px rgba(0, 0, 0, .5);
+            background-color: #242526;
+        }
+        
+        .mensajes {
+            padding: 14px 0;
+            margin: 0px;
+            border-bottom: 1px solid black;
+            color: #f8f7ef;
+        }
+        
+        form {
+            background-color: #1E2428;
+        }
+        
+        .msjE p {
+            color: #f8f7ef;
+            padding: 10px 0;
+            margin: 10px 20px;
+            position: relative;
+            background-color: #ff5b04;
+            padding: 10px;
+            border-radius: 15px;
+            margin-left: 20px;
+        }
+        
+        .msjE p:after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 10px;
+            margin-left: -24px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 15px solid #ff5b04;
+        }
+        
+        input {
+            padding: 10px 20px;
+            box-sizing: border-box;
+            background: #3a3b3c;
+            width: 80%;
+            margin: 20px;
+            margin-right: 0px;
+            color: #f8f7ef;
+            border-radius: 12px;
+        }
+        
+        button {
+            color: #ff5733;
+            background-color: #242526;
+            font-size: 18px;
+            border: 0;
+            padding: 12px 0;
+            width: 9%;
+            margin-left: 0px;
+        }
+    </style>
+</head>
+
+<body class="chat">
+    <div class="container">
+        <div class="mensajes">
+            <div id="messages" class="msjE burbuja"></div>
+            <div class="accion"></div>
+        </div>
+        <form action="">
+            <input id="m" fas fa-comment-alt autocomplete="off" autofocus />
+            <button class="fas fa-paper-plane"></button>
+        </form>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script>
+        $(function() {
+            var socket = io();
+            $('form').submit(function(e) {
+                e.preventDefault(); // prevents page reloading
+                socket.emit('chat message', $('#m').val());
+                $('#m').val('');
+                return false;
+            });
+
+            socket.on('chat message', function(msg) {
+                $('#messages').append($('<p>').text(msg));
+            });
+        });
+    </script>
+</body>
+
+</html>

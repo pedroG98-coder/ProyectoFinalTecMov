@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers</title>
+    <link rel="stylesheet" href="Template.css">
+</head>
+
+<body class="bd">
+    <div class="container">
+        <div class="principal">
+            <p class="pW">Contador <span id="result"></span></p>
+        </div>
+        <button id="btn" onclick="startWorker()">Iniciar Web Worker</button>
+        <br>
+        <button id="btn" onclick="stopWorker()">Detener Web Worker</button>
+        <button id="btn"><a id ="aw"href="Indice.html">Regresar al indice</a> </button>
+    </div>
+
+    <script>
+        var w;
+
+        function startWorker() {
+            if (typeof(Worker) === 'undefined') {
+                document.getElementById('result').innerText = "Tu navegador no es compatible";
+                return;
+            }
+            if (typeof(w) !== "undefined") {
+                return;
+            }
+            w = new Worker("Worker.js");
+
+            w.onmessage = function(event) {
+                document.getElementById("result").innerHTML = event.data;
+            }
+        }
+
+        function stopWorker() {
+            if (typeof(w) === "undefined") {
+                return;
+            }
+            w.terminate();
+            w = undefined;
+        }
+    </script>
+</body>
+
+</html>

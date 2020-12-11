@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indice</title>
+    <link rel="stylesheet" href="Template.css">
+</head>
+
+<body class="bdI">
+    <div class="contenedor">
+        <input type="checkbox" id="toggle">
+        <label for="toggle" class="button"></label>
+
+        <nav class="navI">
+            <a class="aI" href="MapaYGeolocalizacion.html">Geolocalización y Mapas de google</a>
+            <a class="aI" href="WebWorker.html">Web workers</a>
+            <a class="aI" href="javascript:window.open('http://localhost:3000/','','toolbar=yes');void 0">Web sockets</a>
+            <a class="aI" onclick="mostrarNotificacion()">Notificaciones</a>
+            <a class="aI" href="IndexProject.html">Proyecto</a>
+        </nav>
+    </div>
+    <footer>
+        <p class="pi">
+            Integrantes:
+            <br> Francisco Javier Galicia González
+            <br> Pedro Alberto Garcia Maldonado
+            <br> Jorge Antonio Carreón Sedano
+            <br> Emmanuel Galicia González
+        </p>
+    </footer>
+    <script>
+        function mostrarNotificacion() {
+            if (!window.Notification) {
+                txtMensaje.innerText = "No es compatible tu navegador";
+            }
+            Notification.requestPermission(function(status) {
+                if (Notification.permission !== status) {
+                    Notification.permission = status;
+                }
+                if (Notification.permission == "granted") {
+                    var n = new Notification("Notificación", {
+                        body: "Esta es una notificación",
+                        icon: "Imagenes/notificacion.png",
+                        image: "Imagenes/descarga.jpg",
+                        vibrate: [200, 100],
+                        data: {
+                            userId: 1235,
+                            mensaje: "Este es el mensaje"
+                        },
+                    });
+                    n.onclick = (args) => {
+                        alert("Gracias por su compra");
+                        console.log(args.currentTarget.data);
+                    }
+                } else {
+                    txtMensaje.innerText = "No tienes permiso para mandar notifiaciones";
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
